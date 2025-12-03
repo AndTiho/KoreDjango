@@ -20,30 +20,60 @@
 
 <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
     <h1 class="display-4">KoreDjango</h1>
-    <p class="lead">KoreDjango - это отличный вариант хранения ваших плагинов и примеров кода, который вы бы хотели
-        продать</p>
+    <p class="lead">KoreDjango - это отличный сервис по продаже интеллектуальных приборов.</p>
 </div>
 
 <div class="container">
-    <div class="row text-center">
-        <div class="col-3">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">Удобный сервис рассылок</h4>
+<div class="row text-center">
+    {% for product in latest_products %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="card h-100 d-flex flex-column">
+                <!-- Блок с изображением (фиксированная высота) -->
+                <div class="position-relative" style="height: 200px;">
+                    {% if product.product_image %}
+                        <img src="{{ product.product_image.url }}"
+                             alt="{{ product.product_name }}"
+                             class="card-img-top w-100 h-100"
+                             style="object-fit: cover;">
+                    {% else %}
+                        <!-- Заполнитель при отсутствии изображения -->
+                        <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">
+                            Нет изображения
+                        </div>
+                    {% endif %}
                 </div>
-                <div class="card-body">
-                    <h1 class="card-title pricing-card-title">$ 140</h1>
-                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <li>- Неограниченная лицензия</li>
-                        <li>- Поддержка</li>
-                        <li>- Установка на сервер</li>
-                        <li>- Получение обновлений</li>
-                    </ul>
-                    <button type="button" class="btn btn-lg btn-block btn-outline-primary">Купить</button>
+
+                <!-- Тело карточки (занимает всё оставшееся место) -->
+                <div class="card-body d-flex flex-column flex-grow-1">
+                    <div>
+                        <h4 class="my-0 font-weight-normal">{{ product.product_name }}</h4>
+                        {% if product.description %}
+                            <p class="text-muted small mt-2">
+                                {{ product.description|truncatewords:15 }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-auto">
+                        <h1 class="card-title pricing-card-title mt-3">
+                            {{ product.price }} руб.
+                        </h1>
+                        <button type="button"
+                                class="btn btn-lg btn-block btn-outline-primary mt-3">
+                            Купить
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% empty %}
+        <div class="col-12">
+            <p class="text-muted">Нет доступных товаров.</p>
+        </div>
+    {% endfor %}
+</div>
+
+
 
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
         <div class="row">
