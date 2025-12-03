@@ -23,7 +23,7 @@ class Product(models.Model):
     update_at = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
 
     def __str__(self):
-        return f"{self.product_name} - {self.description}. Цена {self.price}"
+        return f"{self.product_name} - {self.category}. Цена {self.price}"
 
     class Meta:
         verbose_name = "продукт"
@@ -34,6 +34,9 @@ class Contacts(models.Model):
     country= models.CharField(max_length=150, verbose_name='Страна')
     inn = models.CharField(max_length=12, verbose_name='ИНН')
     address = models.TextField(verbose_name='Адрес')
+
+    def __str__(self):
+        return f'{self.country} - {self.address}.'
 
     class Meta:
         verbose_name = 'Контакты'
