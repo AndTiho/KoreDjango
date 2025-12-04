@@ -6,13 +6,14 @@ from .models import Contacts, Product
 def home(request):
     """Контроллер рендеринга главной страницы"""
 
-    latest_products = Product.objects.order_by('-create_at')[:5]
+    # latest_products = Product.objects.order_by('-create_at')[:5] - из задания 5 последних добавленных товаров
+    products = Product.objects.all()
 
-    for product in latest_products:
+    for product in products:
         print(f"Продукт: {product.product_name}, Цена: {product.price}, Дата: {product.create_at}")
 
     context = {
-        'latest_products': latest_products
+        'products': products
     }
 
     return render(request, 'catalog/home.html', context)
@@ -33,3 +34,10 @@ def contacts(request):
             'contacts': contacts_data
         })
 
+
+def product_detail(request, product_id):
+    product = Product.objects.get(id=product_id)
+    context={
+        'product': product
+    }
+    return render(request, 'catalog/product_detail.html', context=context )

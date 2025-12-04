@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product_detail</title>
+</head>
+<body>
+<h1>Информация о товаре</h1>
+<p>Название:{{product.product_name}}.</p>
+<p>Описание: {{product.description}}.</p>
+<p>Цена: {{product.price}} рублей.</p>
+<p>Дата создания: {{product.create_at}}</p>
+<p>Фотография:
+    <img src="{{ product.product_image.url }}"
+         alt="{{ product.product_name }}"
+         class="img-fluid"
+         style="max-width: 200px; max-height: 150px;">
+</p>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+@font-face {
+    font-family: 'Great Vibes';
+    src: url('/static/fonts/Great_Vibes/GreatVibes-Regular.woff2') format('woff2'),
+         url('/static/fonts/Great_Vibes/GreatVibes-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+
+.great-vibes-regular {
+    font-family: 'Great Vibes', cursive, sans-serif;
+    font-size: 36px;
+    color: #2c3e50;
+    letter-spacing: 0.8px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+}

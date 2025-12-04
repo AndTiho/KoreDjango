@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
 # Create your models here.
 class Category(models.Model):
@@ -16,9 +17,9 @@ class Category(models.Model):
 class Product(models.Model):
     product_name = models.CharField(max_length=150, unique=True, verbose_name='Наименование')
     description = models.TextField(null=True, blank=True, verbose_name='Описание')
-    product_image = models.ImageField(upload_to='photos/', verbose_name='Изображение')
+    product_image = models.ImageField(upload_to='photos/', null=True, blank=True, verbose_name='Изображение')
     category = models.ForeignKey(Category, related_name='products', on_delete=models.PROTECT)
-    price = models.FloatField(verbose_name="Цена за покупку")
+    price = models.FloatField(validators=[MinValueValidator(0.0)], verbose_name="Цена за покупку",default=0.0)
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     update_at = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
 
