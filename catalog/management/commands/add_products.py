@@ -21,7 +21,7 @@ class Command(BaseCommand):
             {'product_name': 'PlayStation 5', 'description': 'Игровая приставка от Японии', 'category':category,
              'price':999, 'product_image': 'photos/PS5.jpg'},
             {'product_name': 'XBox', 'description': 'Игровая приставка от Америки', 'category': category,
-             'price': 799}
+             'price':799, 'product_image': 'photos/XB.jpg'}
         ]
 
         for product_data in products:

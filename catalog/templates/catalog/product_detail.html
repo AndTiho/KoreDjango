@@ -1,21 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Product_detail</title>
-</head>
-<body>
-<h1>Информация о товаре</h1>
-<p>Название:{{product.product_name}}.</p>
-<p>Описание: {{product.description}}.</p>
-<p>Цена: {{product.price}} рублей.</p>
-<p>Дата создания: {{product.create_at}}</p>
-<p>Фотография:
-    <img src="{{ product.product_image.url }}"
-         alt="{{ product.product_name }}"
-         class="img-fluid"
-         style="max-width: 200px; max-height: 150px;">
-</p>
+{% extends 'catalog/base.html' %}
 
-</body>
-</html>
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div>
+    <h1 class="text-center">Информация о товаре</h1>
+</div>
+<div class="row">
+    <div class="col-5">
+        <p>Название:{{product.product_name}}.</p>
+        <p>Описание: {{product.description}}.</p>
+        <p>Цена: {{product.price}} рублей.</p>
+        <p>Категория: {{product.category}}</p>
+        <p>Дата создания: {{product.create_at}}</p>
+        <p>Дата изменения: {{product.update_at}}</p>
+    </div>
+    <div class="col-2"></div>
+    <div class="col-5 text-center">
+        <p>Фотография</p>
+        <p>
+            {% if product.product_image %}
+            <img src="{{ product.product_image.url }}"
+                 alt="{{ product.product_name }}"
+                 class="img-fluid">
+            {% else %}
+            <span class="text-muted">Изображение не загружено</span>
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+{% endblock %}
