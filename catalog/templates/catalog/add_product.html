@@ -1,0 +1,78 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Добавление товара{% endblock %}
+
+{% block content %}
+<div class="col-lg-5 col-md-6 col-sm-12">
+    <div class="card mb-4 box-shadow">
+        <div class="card-header">
+            <h4 class="my-0 font-weight-normal">Добавление нового товара</h4>
+        </div>
+        <div class="card-body">
+            <form method="post" action="" class="form-floating" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="product_name" class="form-label">Название товара</label>
+                    <input type="text"
+                           name="product_name"
+                           class="form-control"
+                           id="product_name"
+                           placeholder="Введите название"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label">Описание</label>
+                    <textarea name="description"
+                              class="form-control"
+                              id="description"
+                              placeholder="Подробно опишите товар"
+                              rows="3"
+                              required></textarea>
+                </div>
+
+
+                <div class="mb-3">
+                    <label for="category" class="form-label">Категория</label>
+                    <select name="category" class="form-select" id="category" required>
+                        <option value="" disabled selected>Выберите категорию</option>
+                        {% for category in categories %}
+                        <option value="{{ category.id }}">{{ category.category_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="price" class="form-label">Цена (₽)</label>
+                    <input type="number"
+                           name="price"
+                           class="form-control"
+                           id="price"
+                           placeholder="0.00"
+                           step="0.01"
+                    min="0.01"
+                    required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="product_image" class="form-label">Изображение товара</label>
+                    <input type="file"
+                    name="product_image"
+                    class="form-control"
+                    id="product_image"
+                    accept="image/*"
+                    required>
+                    <div class="form-text">
+                        Допустимые форматы: JPG, PNG, WEBP. Максимальный размер: 5МБ.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-lg btn-block btn-outline-primary">
+                    Отправить
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
