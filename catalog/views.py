@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Contacts, Product, Category
@@ -7,15 +8,17 @@ def home(request):
     """Контроллер рендеринга главной страницы"""
 
     # latest_products = Product.objects.order_by('-create_at')[:5] - из задания 5 последних добавленных товаров
-    products = Product.objects.all()
+    products =  Product.objects.all().order_by('-id')
 
-    for product in products:
-        print(f"Продукт: {product.product_name}, Цена: {product.price}, Дата: {product.create_at}")
+    paginator = Paginator(products, 4)
+
+    page_number = request.GET.get('page')
+
+    page_obj = paginator.get_page(page_number)
 
     context = {
-        'products': products
+        'page_obj': page_obj,
     }
-
     return render(request, 'catalog/home.html', context)
 
 def contacts(request):
