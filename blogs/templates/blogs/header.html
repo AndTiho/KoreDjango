@@ -1,0 +1,13 @@
+<header>
+    <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow great-vibes-regular">
+        <h5 class="my-0 mr-md-auto font-weight-normal">KoreDjango-Blogs</h5>
+        <nav class="ms-5 d-flex justify-content-between w-100">
+            <div>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'blogs:blog_home' %}">Главная</a>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'blogs:blog_list' %}">Список блогов</a>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'blogs:blog_form' %}">Добавить блог</a>
+            </div>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:home' %}">НашМАГАЗИН</a>
+        </nav>
+    </div>
+</header>

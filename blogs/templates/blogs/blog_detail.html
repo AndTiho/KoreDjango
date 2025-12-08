@@ -1,0 +1,33 @@
+{% extends 'blogs/base.html' %}
+
+{% block title %}Детали Блога{% endblock %}
+
+{% block content %}
+<div>
+    <h1 class="text-center">Информация о блоге</h1>
+</div>
+<div class="row">
+    <div class="col-5">
+        <p>Название: {{blog.name}}.</p>
+        <p>Содержание: {{blog.text}}.</p>
+        <p>Опубликован: {{blog.published}}.</p>
+        <p>Просмотрено: {{blog.views}}</p>
+        <p>Дата создания: {{blog.create_at}}</p>
+    </div>
+    <div class="col-2"></div>
+    <div class="col-5 text-center">
+        <p>Фотография</p>
+        <p>
+            {% if blog.image %}
+            <img src="{{ blog.image.url }}"
+                 alt="{{ blog.name }}"
+                 class="img-fluid"
+                 style="max-width: 100%; height: auto;">
+            {% else %}
+            <span class="text-muted">Изображение не загружено</span>
+            {% endif %}
+        </p>
+    </div>
+</div>
+
+{% endblock %}

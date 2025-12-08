@@ -6,10 +6,9 @@ from django.conf.urls.static import static
 app_name = 'catalog'
 
 urlpatterns = [
-    path('home/', views.home, name='home'),
-    path('contacts/', views.contacts, name='contacts'),
-    # path('product_detail/<int:product_id>/', views.product_detail, name='product_detail'),
-    # path('add_product/', views.add_product, name="add_product")
+    path('home/', views.HomeView.as_view(), name='home'),
+    path('contacts/', views.ContactsView.as_view(), name='contacts'),
+
     path('product/update/<int:pk>/', views.ProductUpdateView.as_view(), name='product_update'),
     path('product/list/', views.ProductListView.as_view(), name='product_list'),
     path('product/add/', views.ProductCreateView.as_view(), name='product_add'),

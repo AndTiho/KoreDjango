@@ -1,5 +1,6 @@
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
+
 
 # Create your models here.
 class Category(models.Model):
@@ -42,3 +43,17 @@ class Contacts(models.Model):
     class Meta:
         verbose_name = 'Контакты'
         verbose_name_plural = "Контакты"
+
+class CustomerData(models.Model):
+    """Новый класс для записи данных о пользователях.
+    Найти данные можно в Админке"""
+    name = models.CharField(max_length=150, verbose_name='Имя')
+    phone = models.CharField(max_length=20, unique=True, verbose_name='Телефон')
+    message = models.TextField(null=True, blank=True, verbose_name='Сообщение')
+
+    def __str__(self):
+        return f'{self.name} - {self.phone}.'
+
+    class Meta:
+        verbose_name = 'Покупатель'
+        verbose_name_plural = "Покупатели"
