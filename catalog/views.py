@@ -1,6 +1,10 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.urls import reverse_lazy
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic import DetailView, ListView
+
 from .models import Contacts, Product, Category
 
 
@@ -37,92 +41,32 @@ def contacts(request):
             'contacts': contacts_data
         })
 
-
-def product_detail(request, product_id):
-    product = Product.objects.get(id=product_id)
-    context={
-        'product': product
-    }
-    return render(request, 'catalog/product_detail.html', context=context )
+class ProductCreateView(CreateView):
+    model = Product
+    fields = ['product_name', 'description', 'category', 'price', 'product_image']
+    template_name = 'catalog/product_add.html'
+    success_url = reverse_lazy('catalog:product_list')
 
 
-def add_product(request):
-    categories = Category.objects.all()
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
 
-    if request.method == "POST":
+class ProductListView(ListView):
+    model = Product
+    template_name = 'catalog/product_list.html'
+    context_object_name = 'products'
 
-        product_name = request.POST.get("product_name")
-        description = request.POST.get("description")
-        category_id = request.POST.get("category")
-        price = request.POST.get("price")
-        product_image = request.FILES.get("product_image")
 
-        #Валидация обязательных полей
-        if not all([product_name, description, category_id, price]):
-            context = {
-                'categories': categories,
-                'error': 'Пожалуйста, заполните все обязательные поля.'
-            }
-            return render(request, "catalog/add_product.html", context)
+class ProductUpdateView(UpdateView):
+    model = Product
+    fields = ['product_name', 'description', 'category', 'price', 'product_image']
+    template_name = 'catalog/product_add.html'
+    success_url = reverse_lazy('catalog:product_list')
 
-        # Преобразуем и валидируем цену
-        try:
-            price = float(price)
-            if price <= 0:
-                context = {
-                    'categories': categories,
-                    'error': 'Цена должна быть больше нуля.'
-                }
-                return render(request, "catalog/add_product.html", context)
-        except (ValueError, TypeError):
-            context = {
-                'categories': categories,
-                'error': 'Некорректное значение цены.'
-            }
-            return render(request, "catalog/add_product.html", context)
 
-        # Получаем объект Category по ID
-        try:
-            category = Category.objects.get(id=category_id)
-        except Category.DoesNotExist:
-            context = {
-                'categories': categories,
-                'error': 'Выбранная категория не существует.'
-            }
-            return render(request, "catalog/add_product.html", context)
-
-        # Создаём/обновляем продукт
-        try:
-            product, created = Product.objects.get_or_create(
-                product_name=product_name,
-                defaults={
-                    'description': description,
-                    'category': category,
-                    'price': price,
-                    'product_image': product_image
-                }
-            )
-
-            if created:
-                print(f'Successfully added product: {product.product_name}')
-                return HttpResponse(f'Ваш товар с именем {product_name} успешно создан.')
-            else:
-                print(f'Product already exists: {product.product_name}')
-                context = {
-                    'categories': categories,
-                    'error': f'Товар {product_name} уже существует.'
-                }
-                return render(request, "catalog/add_product.html", context)
-
-        except Exception as e:
-            context = {
-                'categories': categories,
-                'error': f'Ошибка при сохранении: {str(e)}'
-            }
-            return render(request, "catalog/add_product.html", context)
-
-    # Для GET-запроса
-    context = {
-        'categories': categories
-    }
-    return render(request, "catalog/add_product.html", context)
+class ProductDeleteView(DeleteView):
+    model = Product
+    template_name = 'catalog/product_confirm_delete.html'
+    success_url = reverse_lazy('catalog:product_list')
