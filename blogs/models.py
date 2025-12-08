@@ -7,6 +7,7 @@ class Blog(models.Model):
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     published = models.BooleanField(default=False, verbose_name='Признак публикации')
     views = models.IntegerField(default=0, verbose_name='Количество просмотров')
+    viewed_100_times = models.BooleanField(default=False)
 
 
     def __str__(self):

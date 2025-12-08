@@ -4,6 +4,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView, ListView
 
+from utils import send_100views_notification
 from .models import Blog
 
 class BlogCreateView(CreateView):
@@ -22,6 +23,12 @@ class BlogDetailView(DetailView):
         obj = super().get_object(queryset)
         obj.views += 1
         obj.save()
+
+        if obj.views >= 100 and not obj.viewed_100_times:
+            send_100views_notification(obj)
+            obj.viewed_100_times = True
+            obj.save(update_fields=['viewed_100_times'])
+
         return obj
 
 class BlogHome(ListView):
