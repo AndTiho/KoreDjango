@@ -22,7 +22,8 @@
             {% if product.product_image %}
             <img src="{{ product.product_image.url }}"
                  alt="{{ product.product_name }}"
-                 class="img-fluid">
+                 class="img-fluid"
+                 style="max-width: 100%; height: auto;">
             {% else %}
             <span class="text-muted">Изображение не загружено</span>
             {% endif %}

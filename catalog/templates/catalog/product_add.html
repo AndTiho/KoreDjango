@@ -1,0 +1,55 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Добавление товара{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-6 col-xl-5">
+            <div class="card shadow-sm rounded-4">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0 d-flex align-items-center">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Добавление нового товара
+                    </h4>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        {{ form.as_p }}
+
+                        <div class="d-flex gap-2 pt-3">
+                            <button type="submit" class="btn btn-lg btn-block btn-outline-primary">
+                                <i class="bi bi-check-circle"></i> Сохранить
+                            </button>
+                            <a href="{% url 'catalog:product_list' %}" class="btn btn-lg btn-block btn-outline-secondary">
+                                <i class="bi bi-x-circle"></i> Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+<!--<div class="col-lg-5 col-md-6 col-sm-12">-->
+<!--    <div class="card mb-4 box-shadow">-->
+<!--        <div class="card-header">-->
+<!--            <h4 class="my-0 font-weight-normal">Добавление нового товара</h4>-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--            <form method="post" action="" class="form-floating" enctype="multipart/form-data">-->
+<!--                {% csrf_token %}-->
+<!--                {{ form.as_p }}-->
+<!--                <button type="submit" class="btn btn-lg btn-block btn-outline-primary">-->
+<!--                    Отправить-->
+<!--                </button>-->
+<!--                <a href="{% url 'catalog:product_list' %}">Отмена</a>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
