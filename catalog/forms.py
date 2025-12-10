@@ -91,11 +91,6 @@ class ProductForm(forms.ModelForm):
         if not image:
             return image  # поле необязательно
 
-        # Проверка формата файла
-        file_type = image.content_type.split('/')[1].lower()
-        if file_type not in ['jpeg', 'jpg', 'png']:
-            raise ValidationError('Допустимы только форматы JPEG и PNG.')
-
         # Проверка размера (5 МБ = 5 * 1024 * 1024 байт)
         max_size = 5 * 1024 * 1024  # 5 МБ
         if image.size > max_size:
