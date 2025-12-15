@@ -9,7 +9,25 @@
                 <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product_add' %}">Добавить товар</a>
                 <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:contacts' %}">Контакты</a>
             </div>
-            <a class="p-2 btn btn-outline-primary" href="{% url 'blogs:blog_home' %}">Наши БЛОГИ</a>
+            <div>
+                <a class="p-2 btn btn-outline-primary" href="{% url 'blogs:blog_home' %}">Наши БЛОГИ</a>
+            </div>
+            {% if user.is_authenticated %}
+            <ul>
+                <a class="fs-5">Мы рады вам, {{ user.username }}!</a>
+                <form method="post" action="{% url 'users:logout' %}">
+                    {%csrf_token%}
+                    <button type="submit" class="p-2 btn btn-outline-primary">Выйти</button>
+                </form>
+<!--                <a class="p-2 btn btn-outline-primary" href="{% url 'users:logout' %}">Выход</a>-->
+            </ul>
+            {% else %}
+            <ul>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Вход</a>
+            <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Регистрация</a>
+            </ul>
+                {% endif %}
+
         </nav>
     </div>
 </header>

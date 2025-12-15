@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+
+from django.conf.global_settings import AUTH_USER_MODEL
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -41,7 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "catalog",
-    "blogs"
+    "blogs",
+    "users"
 ]
 
 MIDDLEWARE = [
@@ -153,3 +156,6 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # 16‑значный п
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # для ошибок сервера
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
