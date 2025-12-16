@@ -8,7 +8,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = CustomUser
-        fields = ('email', 'username', 'password1', 'password2')
+        fields = ('email', 'username', 'password1', 'password2', 'avatar')
 
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
@@ -34,8 +34,38 @@ class CustomUserCreationForm(UserCreationForm):
             'placeholder': 'Подтвердите пароль'
         })
 
+class CustomUserUpdateForm(forms.ModelForm):
+    class Meta:
+        model = CustomUser
+        fields = [
+            'first_name',
+            'last_name',
+            'username',
+            'avatar',
+            'phone_number',
+            'country',
+        ]
+        help_texts = {
+            'username': None,
+        }
+        labels = {
+            'first_name': 'Имя',
+            'last_name': 'Фамилия',
+            'username': 'Логин',
+            'phone_number': 'Телефон',
+            'country': 'Страна',
+            'avatar': 'Фото'
+        }
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Имя'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Фамилия'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Логин'}),
+            'phone_number': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+7...'}),
+            'country': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Страна'}),
+        }
 
-        # self.fields['product_image'].help_text = (
-        #     'Поддерживаются форматы: JPEG, JPG, PNG. Максимальный размер: 5 МБ.'
-        # )
-
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['avatar'].help_text = (
+            'Поддерживаются форматы: JPEG, JPG, PNG. Максимальный размер: 5 МБ.'
+        )

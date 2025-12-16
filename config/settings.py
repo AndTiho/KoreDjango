@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 
-from django.conf.global_settings import AUTH_USER_MODEL
+from django.conf.global_settings import AUTH_USER_MODEL, LOGIN_REDIRECT_URL
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -147,8 +147,9 @@ BASE_URL = 'http://127.0.0.1:8000'
 # SMTP‑настройки для mail.ru
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 465  # для SSL
-EMAIL_USE_SSL = True  # обязательно для mail.ru
+EMAIL_PORT = 2525 # 465 или 2525
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
 
 # Ваши данные
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  # полный адрес почты
@@ -159,3 +160,5 @@ SERVER_EMAIL = EMAIL_HOST_USER  # для ошибок сервера
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
+# LOGIN_REDIRECT_URL = 'catalog:product_list'
+LOGIN_URL = 'users:login'

@@ -3,31 +3,36 @@
         <h5 class="my-0 mr-md-auto font-weight-normal">KoreDjango</h5>
         <nav class="ms-5 d-flex justify-content-between w-100">
             <div>
-                <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:home' %}">Главная</a>
-                <a class="p-2 btn btn-outline-primary" href="/">Каталог</a>
-                <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product_list' %}">Список товаров</a>
-                <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:product_add' %}">Добавить товар</a>
-                <a class="p-2 btn btn-outline-primary" href="{% url 'catalog:contacts' %}">Контакты</a>
-            </div>
-            <div>
-                <a class="p-2 btn btn-outline-primary" href="{% url 'blogs:blog_home' %}">Наши БЛОГИ</a>
+                <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:home' %}">Главная</a>
+                <a class="p-1 btn btn-outline-primary" href="/">Каталог</a>
+                <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:product_list' %}">Список товаров</a>
+                <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:product_add' %}">Добавить товар</a>
+                <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:contacts' %}">Контакты</a>
             </div>
             {% if user.is_authenticated %}
-            <ul>
-                <a class="fs-5">Мы рады вам, {{ user.username }}!</a>
-                <form method="post" action="{% url 'users:logout' %}">
-                    {%csrf_token%}
-                    <button type="submit" class="p-2 btn btn-outline-primary">Выйти</button>
-                </form>
-<!--                <a class="p-2 btn btn-outline-primary" href="{% url 'users:logout' %}">Выход</a>-->
-            </ul>
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <span class="fs-5 text-nowrap">Мы рады вам, {{ user.username }}!</span>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-primary px-3 fs-6"
+                       href="{% url 'users:profile_detail' user.pk %}">Профиль</a>
+                    <form method="post" action="{% url 'users:logout' %}" class="m-0 d-inline">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="btn btn-outline-primary px-3 fs-6">Выйти
+                        </button>
+                    </form>
+                </div>
+            </div>
             {% else %}
-            <ul>
-            <a class="p-2 btn btn-outline-primary" href="{% url 'users:login' %}">Вход</a>
-            <a class="p-2 btn btn-outline-primary" href="{% url 'users:register' %}">Регистрация</a>
+            <ul class="list-inline m-0 d-flex align-items-center">
+                <li class="list-inline-item">
+                    <a class="p-1 btn btn-outline-primary" href="{% url 'users:login' %}">Вход</a>
+                </li>
+                <li class="list-inline-item">
+                    <a class="p-1 btn btn-outline-primary" href="{% url 'users:register' %}">Регистрация</a>
+                </li>
             </ul>
-                {% endif %}
-
+            {% endif %}
         </nav>
     </div>
 </header>
