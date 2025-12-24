@@ -14,6 +14,7 @@
         <p>Категория: {{product.category}}</p>
         <p>Дата создания: {{product.create_at}}</p>
         <p>Дата изменения: {{product.update_at}}</p>
+        <p>Публикация: {{product.published}}</p>
     </div>
     <div class="col-2"></div>
     <div class="col-5 text-center">
@@ -28,6 +29,12 @@
             <span class="text-muted">Изображение не загружено</span>
             {% endif %}
         </p>
+        {% if 'catalog.can_unpublish_product' in perms %}
+        <form action="{% url 'catalog:product_unpublish' product.id %}" method="post">
+            {% csrf_token%}
+            <button type="submit" class="btn btn-lg btn-block btn-outline-primary mt-3">Отмена публикации</button>
+        </form>
+        {% endif %}
     </div>
 </div>
 
