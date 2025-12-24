@@ -31,7 +31,7 @@
                                         {{ product.product_name }}
                                     </a>
                                 </div>
-
+                                {% if user.is_authenticated %}
                                 <!-- Кнопки действий -->
                                 <div class="d-flex gap-2">
                                     <a href="{% url 'catalog:product_update' product.pk %}"
@@ -43,6 +43,7 @@
                                         <i class="bi bi-trash"></i> Удалить
                                     </a>
                                 </div>
+                                {% endif %}
                             </div>
                         </li>
                     {% endfor %}
