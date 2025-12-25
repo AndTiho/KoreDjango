@@ -6,7 +6,9 @@
                 <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:home' %}">Главная</a>
                 <a class="p-1 btn btn-outline-primary" href="/">Каталог</a>
                 <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:product_list' %}">Список товаров</a>
+
                 <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:product_add' %}">Добавить товар</a>
+
                 <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:contacts' %}">Контакты</a>
             </div>
             {% if user.is_authenticated %}

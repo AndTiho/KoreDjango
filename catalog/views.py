@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
@@ -79,6 +80,14 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     template_name = 'catalog/product_add.html'
     success_url = reverse_lazy('catalog:product_list')
 
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
+        return super().form_valid(form)
+
+
 
 class ProductDetailView(LoginRequiredMixin, DetailView):
     """Класс для детальной информации по продукту"""
@@ -102,10 +111,26 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'catalog/product_add.html'
     success_url = reverse_lazy('catalog:product_list')
 
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.owner:
+            return ProductForm
+        # if user.has_perm("catalog.delete_product"):
+        raise PermissionDenied
 
-class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+
+
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """Класс для удаления продукта"""
     model = Product
     template_name = 'catalog/product_confirm_delete.html'
     success_url = reverse_lazy('catalog:product_list')
-    permission_required = 'catalog.delete_product'
+
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if (request.user == self.object.owner
+                or request.user.has_perm('catalog.delete_product')):
+            return super().dispatch(request, *args, **kwargs)
+
+        raise PermissionDenied  # 403 Forbidden

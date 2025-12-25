@@ -14,7 +14,20 @@
         <p>Категория: {{product.category}}</p>
         <p>Дата создания: {{product.create_at}}</p>
         <p>Дата изменения: {{product.update_at}}</p>
-        <p>Публикация: {{product.published}}</p>
+        <p>Публикация:
+            {% if product.published %}
+            Опубликован
+            {% else %}
+            Не опубликован
+            {% endif %}
+        </p>
+        <p>Владелец:
+            {% if product.owner %}
+            {{ product.owner }}
+            {% else %}
+            Админ
+            {% endif %}
+        </p>
     </div>
     <div class="col-2"></div>
     <div class="col-5 text-center">
