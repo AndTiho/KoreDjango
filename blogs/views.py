@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -8,7 +9,7 @@ from blogs.forms import BlogForm
 from utils import send_100views_notification
 from .models import Blog
 
-class BlogCreateView(CreateView):
+class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     form_class = BlogForm
     template_name = 'blogs/blog_form.html'
@@ -55,17 +56,19 @@ class BlogListView(ListView):
     context_object_name = 'blogs'
 
 
-class BlogUpdateView(UpdateView):
+class BlogUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Blog
     form_class = BlogForm
     template_name = 'blogs/blog_form.html'
+    permission_required = 'blogs.change_blog'
 
     def get_success_url(self):
         return reverse_lazy('blogs:blog_detail', kwargs={'pk': self.object.pk})
 
 
-class BlogDeleteView(DeleteView):
+class BlogDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Blog
     template_name = 'blogs/blog_confirm_delete.html'
     success_url = reverse_lazy('blogs:blog_list')
+    permission_required = 'blogs.delete_blog'
 
