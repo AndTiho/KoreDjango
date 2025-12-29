@@ -7,6 +7,30 @@
                 <a class="p-2 btn btn-outline-primary" href="{% url 'blogs:blog_list' %}">Список блогов</a>
                 <a class="p-2 btn btn-outline-primary" href="{% url 'blogs:blog_form' %}">Добавить блог</a>
             </div>
+            {% if user.is_authenticated %}
+            <div class="d-flex align-items-center gap-3 flex-wrap">
+                <span class="fs-5 text-nowrap">Мы рады вам, {{ user.username }}!</span>
+                <div class="d-flex gap-2">
+                    <a class="btn btn-outline-primary px-3 fs-6"
+                       href="{% url 'users:profile_detail' user.pk %}">Профиль</a>
+                    <form method="post" action="{% url 'users:logout' %}" class="m-0 d-inline">
+                        {% csrf_token %}
+                        <button type="submit"
+                                class="btn btn-outline-primary px-3 fs-6">Выйти
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <ul class="list-inline m-0 d-flex align-items-center">
+                <li class="list-inline-item">
+                    <a class="p-1 btn btn-outline-primary" href="{% url 'users:login' %}">Вход</a>
+                </li>
+                <li class="list-inline-item">
+                    <a class="p-1 btn btn-outline-primary" href="{% url 'users:register' %}">Регистрация</a>
+                </li>
+            </ul>
+            {% endif %}
         </nav>
     </div>
 </header>

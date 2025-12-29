@@ -1,5 +1,8 @@
+from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MinValueValidator, RegexValidator
+
+from config import settings
 
 
 # Create your models here.
@@ -23,6 +26,8 @@ class Product(models.Model):
     price = models.FloatField(verbose_name="Цена за покупку",default=0.0)
     create_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     update_at = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
+    published = models.BooleanField(default=False, verbose_name='Признак публикации')
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="Владелец", help_text='Укажите владельца продукта', blank=True, null=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return f"{self.product_name} - {self.category}. Цена {self.price}"
@@ -31,6 +36,9 @@ class Product(models.Model):
         verbose_name = "продукт"
         verbose_name_plural = 'продукты'
         ordering = ['product_name']
+        permissions = [
+            ('can_unpublish_product', 'Can unpublish product')
+        ]
 
 class Contacts(models.Model):
     country= models.CharField(max_length=150, verbose_name='Страна')
