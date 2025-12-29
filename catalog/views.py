@@ -114,15 +114,6 @@ class ProductListView(ListView):
             cache.set('product_queryset', queryset, 60 * 15)
         return queryset
 
-    # def get_context_data(self, **kwargs):
-    #     # Получаем стандартный контекст данных из родительского класса
-    #     context = super().get_context_data(**kwargs)
-    #     # Получаем ID студента из объекта
-    #     category_id = self.object.id
-    #     # Добавляем в контекст полное имя, средний балл и статус сдачи предмета
-    #     context['full_name'] = ProductService.get_product_list_by_category(category_id)
-    #     return context
-
 
 
 class ProductUpdateView(LoginRequiredMixin, UpdateView):
@@ -169,10 +160,16 @@ class CategoryListView(ListView):
     template_name = 'catalog/category_list.html'
     context_object_name = 'category'
 
+    def get_queryset(self):
+        queryset = cache.get('category_queryset')
+        if not queryset:
+            queryset = super().get_queryset()
+            cache.set('category_queryset', queryset, 60 * 15)
+        return queryset
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Получаем pk из URL (например, /category/5/)
         category_id = self.kwargs['pk']
 
         context['category'] = Category.objects.get(pk=self.kwargs['pk'])
