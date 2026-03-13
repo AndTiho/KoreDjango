@@ -1,0 +1,54 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div>
+    <h1 class="text-center">Информация о товаре</h1>
+</div>
+<div class="row">
+    <div class="col-5">
+        <p>Название:{{product.product_name}}.</p>
+        <p>Описание: {{product.description}}.</p>
+        <p>Цена: {{product.price}} рублей.</p>
+        <p>Категория: {{product.category}}</p>
+        <p>Дата создания: {{product.create_at}}</p>
+        <p>Дата изменения: {{product.update_at}}</p>
+        <p>Публикация:
+            {% if product.published %}
+            Опубликован
+            {% else %}
+            Не опубликован
+            {% endif %}
+        </p>
+        <p>Владелец:
+            {% if product.owner %}
+            {{ product.owner }}
+            {% else %}
+            Админ
+            {% endif %}
+        </p>
+    </div>
+    <div class="col-2"></div>
+    <div class="col-5 text-center">
+        <p>Фотография</p>
+        <p>
+            {% if product.product_image %}
+            <img src="{{ product.product_image.url }}"
+                 alt="{{ product.product_name }}"
+                 class="img-fluid"
+                 style="max-width: 100%; height: auto;">
+            {% else %}
+            <span class="text-muted">Изображение не загружено</span>
+            {% endif %}
+        </p>
+        {% if 'catalog.can_unpublish_product' in perms %}
+        <form action="{% url 'catalog:product_unpublish' product.id %}" method="post">
+            {% csrf_token%}
+            <button type="submit" class="btn btn-lg btn-block btn-outline-primary mt-3">Отмена публикации</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

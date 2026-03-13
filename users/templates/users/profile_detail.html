@@ -1,0 +1,41 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div>
+    <h1 class="text-center">Информация о профиле</h1>
+</div>
+<div class="row">
+    <div class="col-5">
+        <p>Почта: {{user.email}}.</p>
+        <p>Псевдоним: {{user.username}}.</p>
+        <p>Имя: {{user.first_name}}.</p>
+        <p>Фамилия: {{user.last_name}}.</p>
+        <p>Дата регистр.: {{user.date_joined}}.</p>
+        <p>Телефон: {{user.phone_number}}.</p>
+        <p>Страна: {{user.country}}.</p>
+    </div>
+    <div class="col-2"></div>
+    <div class="col-5 text-center">
+        <p>Фотография</p>
+        <p>
+            {% if user.avatar %}
+            <img src="{{ user.avatar.url }}"
+                 alt="{{ user.email }}"
+                 class="img-fluid"
+                 style="max-width: 100%; height: auto;">
+            {% else %}
+            <span class="text-muted">Аватар не загружен</span>
+            {% endif %}
+        <div class="d-flex gap-2">
+            <a href="{% url 'users:profile_update' user.pk %}"
+               class="btn btn-sm btn-outline-primary">
+                <i class="bi bi-pencil"></i> Редактировать
+            </a>
+        </div>
+        </p>
+    </div>
+</div>
+
+{% endblock %}

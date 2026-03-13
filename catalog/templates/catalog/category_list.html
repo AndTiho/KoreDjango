@@ -1,0 +1,45 @@
+{% extends "catalog/base.html" %}
+
+
+{% block title %}Список товаров в категории{% endblock %}
+
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center lead great-vibes-regular fs-4">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <!-- Заголовок -->
+            <h1 class="text-center mb-4 text-primary">
+                <i class="bi bi-box-seam" aria-hidden="true"></i> Список товаров в категории
+            </h1>
+
+            <!-- Название категории -->
+            {% if category %}
+                <h2 class="text-center mb-3 ">{{ category.category_name }}</h2>
+            {% endif %}
+
+            <!-- Список товаров -->
+            {% if products_be_category %}
+                <ul class="list-group list-group-flush rounded-3 shadow-sm">
+                    {% for product in products_be_category %}
+                        <li class="list-group-item px-0 py-3 border-bottom">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <div class="flex-grow-1">
+                                    <a href="{% url 'catalog:product_detail' product.pk %}"
+                                       class="text-decoration-none text-dark fs-5">
+                                        {{ product.product_name }}
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="text-muted">В этой категории пока нет товаров.</p>
+            {% endif %}
+        </div>
+                <a href="{% url 'catalog:catalog' %}" class="mx-auto d-block mt-3 fs-5 btn btn-lg btn-block btn-outline-primary">Назад к Каталогу</a>
+
+    </div>
+</div>
+{% endblock %}

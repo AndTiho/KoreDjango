@@ -1,0 +1,107 @@
+{% extends 'blogs/base.html' %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4 great-vibes-regular fs-1">KoreDjango-Blogs</h1>
+</div>
+
+<div class="row text-center">
+    {% for blog in page_obj %}
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="card h-100 d-flex flex-column">
+                <!-- Блок с изображением (фиксированная высота) -->
+                <div class="position-relative mt-2" style="height: 200px;">
+                    {% if blog.image %}
+                        <img src="{{ blog.image.url }}"
+                             alt="{{ blog.name }}"
+                             class="card-img-top w-100 h-100"
+                             style="object-fit: cover;">
+                    {% else %}
+                        <!-- Заполнитель при отсутствии изображения -->
+                        <div class="d-flex align-items-center justify-content-center h-100 bg-light text-muted">
+                            Нет изображения
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Тело карточки (занимает всё оставшееся место) -->
+                <div class="card-body d-flex flex-column flex-grow-1">
+                    <div>
+                        <h4 class="my-0 font-weight-normal">{{ blog.name }}</h4>
+                        {% if blog.text %}
+                            <p class="text-muted small mt-2">
+                                {{ blog.text|truncatechars:100 }}
+                            </p>
+                        {% endif %}
+                    </div>
+
+                    <div class="mt-auto">
+                        <h3 class="card-title pricing-card-title mt-3">
+                            {{ blog.views }} просмотров
+                        </h3>
+                        <button type="button"
+                                class="btn btn-lg btn-block btn-outline-primary mt-3"
+                                onclick="window.location.href='{% url 'blogs:blog_detail' blog.pk %}'">
+                            Читать
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="col-12">
+            <p class="text-muted">Нет доступных товаров.</p>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Блок пагинации -->
+{% if page_obj.has_other_pages %}
+    <nav aria-label="Страницация товаров" class="my-4">
+        <ul class="pagination justify-content-center">
+            <!-- Кнопка «Предыдущая» -->
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Предыдущая">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&laquo;</span>
+                </li>
+            {% endif %}
+
+            <!-- Номера страниц -->
+            {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ num }}
+                            <span class="visually-hidden">(текущая)</span>
+                        </span>
+                    </li>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            <!-- Кнопка «Следующая» -->
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Следующая">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">&raquo;</span>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+{% endblock %}

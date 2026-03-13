@@ -1,0 +1,62 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Список товаров{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <!-- Заголовок -->
+            <h1 class="text-center mb-4 text-primary">
+                <i class="bi bi-box-seam"></i> Список товаров
+            </h1>
+
+            <!-- Кнопка "Создать" -->
+            <div class="d-flex justify-content-end mb-3">
+                <a href="{% url 'catalog:product_add' %}" class="btn btn-success btn-lg">
+                    <i class="bi bi-plus-circle"></i> Создать новый товар
+                </a>
+            </div>
+
+            <!-- Список товаров -->
+            {% if products %}
+                <ul class="list-group list-group-flush rounded-3 shadow-sm">
+                    {% for product in products %}
+                        <li class="list-group-item px-0 py-3 border-bottom">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <!-- Название товара (ссылка на детальный просмотр) -->
+                                <div class="flex-grow-1">
+                                    <a href="{% url 'catalog:product_detail' product.pk %}"
+                               class="text-decoration-none text-dark fs-5">
+                                        {{ product.product_name }}
+                                    </a>
+                                </div>
+
+                                <!-- Кнопки действий -->
+                                <div class="d-flex gap-2">
+                                    {% if product.owner == user %}
+                                    <a href="{% url 'catalog:product_update' product.pk %}"
+                               class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i> Редактировать
+                                    </a>
+                                    {% endif %}
+                                    <a href="{% url 'catalog:product_delete' product.pk %}"
+                                        class="btn btn-sm btn-outline-danger">
+                                        <i class="bi bi-trash"></i> Удалить
+                                    </a>
+                                </div>
+
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <!-- Сообщение при отсутствии товаров -->
+                <div class="alert alert-info text-center rounded-3">
+                    <i class="bi bi-inbox"></i> Товаров пока нет. Создайте первый!
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+
+from django.conf.global_settings import AUTH_USER_MODEL, LOGIN_REDIRECT_URL
 from dotenv import load_dotenv
 from pathlib import Path
 
@@ -21,11 +23,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-load_dotenv()
+load_dotenv(override=True)
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.getenv("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = []
 
@@ -40,7 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    "catalog"
+    "catalog",
+    "blogs",
+    "users"
 ]
 
 MIDDLEWARE = [
@@ -78,8 +82,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.getenv("NAME"),
+        "HOST": os.getenv("HOST"),
+        "USER": os.getenv("USER"),
+        "PASSWORD": os.getenv("PASSWORD"),
+        "PORT": os.getenv("PORT")
+
     }
 }
 
@@ -125,7 +134,38 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Разрешённые типы файлов (дополнительная защита)
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 МБ
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+BASE_URL = 'http://127.0.0.1:8000'
+
+# SMTP‑настройки для mail.ru
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525 # 465 или 2525
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
+# Ваши данные
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")  # полный адрес почты
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # 16‑значный пароль из п. 1
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+SERVER_EMAIL = EMAIL_HOST_USER  # для ошибок сервера
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+# LOGIN_REDIRECT_URL = 'catalog:product_list'
+LOGIN_URL = 'users:login'
+
+CACHES = {
+    'default':{
+        'BACKEND':'django_redis.cache.RedisCache',
+        'LOCATION':'redis://127.0.0.1:6379/1',
+    }
+}
