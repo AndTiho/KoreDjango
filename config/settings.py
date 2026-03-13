@@ -30,6 +30,7 @@ DEBUG = True if os.getenv("DEBUG") == "True" else False
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = ["http://*"]
 
 # Application definition
 
