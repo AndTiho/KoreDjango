@@ -1,7 +1,10 @@
+from django.core.cache import cache
 from django.core.exceptions import PermissionDenied
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView, ListView, View
 
@@ -9,6 +12,8 @@ from .models import Contacts, Product, Category, CustomerData
 from catalog.forms import ProductForm
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponseForbidden
+
+from .services import ProductService
 
 
 class HomeView(ListView):
@@ -88,7 +93,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetailView(LoginRequiredMixin, DetailView):
     """Класс для детальной информации по продукту"""
     model = Product
@@ -101,6 +106,13 @@ class ProductListView(ListView):
     model = Product
     template_name = 'catalog/product_list.html'
     context_object_name = 'products'
+
+    def get_queryset(self):
+        queryset = cache.get('product_queryset')
+        if not queryset:
+            queryset = super().get_queryset()
+            cache.set('product_queryset', queryset, 60 * 15)
+        return queryset
 
 
 
@@ -115,7 +127,6 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         user = self.request.user
         if user == self.object.owner:
             return ProductForm
-        # if user.has_perm("catalog.delete_product"):
         raise PermissionDenied
 
 
@@ -133,4 +144,34 @@ class ProductDeleteView(LoginRequiredMixin, DeleteView):
                 or request.user.has_perm('catalog.delete_product')):
             return super().dispatch(request, *args, **kwargs)
 
-        raise PermissionDenied  # 403 Forbidden
+        raise PermissionDenied
+
+
+class CategoryView(ListView):
+    """Класс для просмотра списка категорий"""
+    model = Category
+    template_name = 'catalog/catalog.html'
+    context_object_name = 'category'
+
+
+class CategoryListView(ListView):
+    """Класс для просмотра списка всех продуктов в заданной категории"""
+    model = Category
+    template_name = 'catalog/category_list.html'
+    context_object_name = 'category'
+
+    def get_queryset(self):
+        queryset = cache.get('category_queryset')
+        if not queryset:
+            queryset = super().get_queryset()
+            cache.set('category_queryset', queryset, 60 * 15)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        category_id = self.kwargs['pk']
+
+        context['category'] = Category.objects.get(pk=self.kwargs['pk'])
+        context['products_be_category'] = ProductService.get_product_list_by_category(category_id)
+        return context

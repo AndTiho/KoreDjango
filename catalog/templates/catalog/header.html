@@ -4,7 +4,7 @@
         <nav class="ms-5 d-flex justify-content-between w-100">
             <div>
                 <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:home' %}">Главная</a>
-                <a class="p-1 btn btn-outline-primary" href="/">Каталог</a>
+                <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:catalog' %}">Каталог</a>
                 <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:product_list' %}">Список товаров</a>
 
                 <a class="p-1 btn btn-outline-primary" href="{% url 'catalog:product_add' %}">Добавить товар</a>

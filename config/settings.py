@@ -162,3 +162,10 @@ AUTH_USER_MODEL = 'users.CustomUser'
 
 # LOGIN_REDIRECT_URL = 'catalog:product_list'
 LOGIN_URL = 'users:login'
+
+CACHES = {
+    'default':{
+        'BACKEND':'django_redis.cache.RedisCache',
+        'LOCATION':'redis://127.0.0.1:6379/1',
+    }
+}

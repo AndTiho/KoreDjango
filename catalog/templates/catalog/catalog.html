@@ -1,0 +1,35 @@
+{% extends 'catalog/base.html' %}
+
+{% block title %}Список товаров{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <div class="row justify-content-center lead great-vibes-regular fs-4">
+        <div class="col-12 col-lg-10 col-xl-8">
+            <!-- Заголовок -->
+            <h1 class="text-center mb-4 text-primary">
+                <i class="bi bi-box-seam"></i> Каталог
+            </h1>
+
+            <!-- Список товаров -->
+            {% if category %}
+                <ul class="list-group list-group-flush rounded-3 shadow-sm">
+                    {% for categor in category %}
+                        <li class="list-group-item px-0 py-3 border-bottom">
+                            <div class="d-flex align-items-center justify-content-between">
+                                <!-- Название товара (ссылка на детальный просмотр) -->
+                                <div class="flex-grow-1">
+                                    <a href="{% url 'catalog:category_list' categor.pk %}"
+                               class="text-decoration-none text-dark fs-5">
+                                        {{ categor.category_name }}
+                                    </a>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
