@@ -1,4 +1,4 @@
-name: CI/CD
+name: Django CI
 
 on:
   pull_request:
@@ -36,20 +36,13 @@ jobs:
         image: redis:7
         ports:
           - 6379:6379
-        options: >-
-          --health-cmd="redis-cli ping"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
 
     env:
-      POSTGRES_DB: test_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_HOST: 127.0.0.1
-      POSTGRES_PORT: 5432
-      REDIS_HOST: 127.0.0.1
-      REDIS_PORT: 6379
+      NAME: test_db
+      USER: postgres
+      PASSWORD: postgres
+      HOST: 127.0.0.1
+      PORT: 5432
 
     steps:
       - name: Check out code
@@ -59,15 +52,14 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-          cache: "poetry"
 
       - name: Install Poetry
-        run: pip install poetry
+        run: python -m pip install poetry
 
       - name: Install dependencies
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          poetry config virtualenvs.create false
+          poetry install --no-interaction --no-ansi --no-root
 
       - name: Run migrations
         run: poetry run python manage.py migrate
@@ -81,10 +73,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
-      - name: Set up SSH agent
+      - name: Set up SSH
         uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.SSH_KEY }}
@@ -96,13 +85,11 @@ jobs:
 
       - name: Deploy on server
         run: |
-          ssh "${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}" << 'EOF'
+          ssh "${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}" << EOF
             set -e
-
             cd "${{ secrets.DEPLOY_DIR }}"
             git fetch origin main
             git reset --hard origin/main
-
             docker compose up -d --build
             docker compose exec -T web python manage.py migrate
             docker compose exec -T web python manage.py collectstatic --noinput
