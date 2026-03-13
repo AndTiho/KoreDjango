@@ -10,7 +10,7 @@ from django.views.generic import DetailView, ListView, View
 
 from .models import Contacts, Product, Category, CustomerData
 from catalog.forms import ProductForm
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
 
 from .services import ProductService
