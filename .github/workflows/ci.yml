@@ -126,7 +126,26 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
             docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+      
+            docker network create appnet || true
+      
             docker stop myapp || true
             docker rm myapp || true
-            docker run -d --name myapp --env-file /home/adminmoon/KoreDjango/.env -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+      
+            docker stop db || true
+            docker rm db || true
+      
+            docker run -d \
+              --name db \
+              --network appnet \
+              --env-file /home/adminmoon/KoreDjango/.env \
+              -v postgres_data:/var/lib/postgresql/data \
+              postgres:16
+      
+            docker run -d \
+              --name myapp \
+              --network appnet \
+              --env-file /home/adminmoon/KoreDjango/.env \
+              -p 80:8000 \
+              ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
