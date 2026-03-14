@@ -67,9 +67,27 @@ jobs:
       - name: Run tests
         run: poetry run python manage.py test
 
-  deploy:
+  build:
     runs-on: ubuntu-latest
     needs: test
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v5
+
+      - name: Log in to Docker Hub
+        run: echo ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }} | docker login -u ${{ secrets.DOCKER_HUB_USERNAME }} --password-stdin
+
+      - name: Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }} .
+
+      - name: Push Docker image to Docker Hub
+        run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
@@ -85,12 +103,9 @@ jobs:
 
       - name: Deploy on server
         run: |
-          ssh "${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }}" << EOF
-            set -e
-            cd "${{ secrets.DEPLOY_DIR }}"
-            git fetch origin main
-            git reset --hard origin/main
-            docker compose up -d --build
-            docker compose exec -T web python manage.py migrate
-            docker compose exec -T web python manage.py collectstatic --noinput
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SERVER_IP }} << 'EOF'
+            docker pull ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
+            docker stop myapp || true
+            docker rm myapp || true
+            docker run -d --name myapp -p 80:8000 ${{ secrets.DOCKER_HUB_USERNAME }}/myapp:${{ github.sha }}
           EOF
