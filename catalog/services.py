@@ -1,4 +1,5 @@
-from .models import Product, Category
+from .models import Product
+
 
 class ProductService:
 
