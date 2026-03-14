@@ -1,7 +1,14 @@
 .git
 .gitignore
-.env
 venv
 __pycache__
 *.pyc
-test_db.sqlite3
+*.pyo
+*.pyd
+db.sqlite3
+.env
+.idea
+.vscode
+node_modules
+staticfiles
+media
