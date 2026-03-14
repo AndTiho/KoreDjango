@@ -2,24 +2,26 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import DetailView, ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
 
 from blogs.forms import BlogForm
 from utils import send_100views_notification
+
 from .models import Blog
+
 
 class BlogCreateView(LoginRequiredMixin, CreateView):
     model = Blog
     form_class = BlogForm
-    template_name = 'blogs/blog_form.html'
-    success_url = reverse_lazy('blogs:blog_list')
+    template_name = "blogs/blog_form.html"
+    success_url = reverse_lazy("blogs:blog_list")
 
 
 class BlogDetailView(DetailView):
     model = Blog
-    template_name = 'blogs/blog_detail.html'
-    context_object_name = 'blog'
+    template_name = "blogs/blog_detail.html"
+    context_object_name = "blog"
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset)
@@ -29,46 +31,46 @@ class BlogDetailView(DetailView):
         if obj.views >= 100 and not obj.viewed_100_times:
             send_100views_notification(obj)
             obj.viewed_100_times = True
-            obj.save(update_fields=['viewed_100_times'])
+            obj.save(update_fields=["viewed_100_times"])
 
         return obj
 
+
 class BlogHome(ListView):
     model = Blog
-    template_name = 'blogs/blog_home.html'
-    context_object_name = 'page_obj'
+    template_name = "blogs/blog_home.html"
+    context_object_name = "page_obj"
     paginate_by = 4
 
     def get(self, request, *args, **kwargs):
-        blogs = Blog.objects.filter(published=True).order_by('-views')
+        blogs = Blog.objects.filter(published=True).order_by("-views")
         paginator = Paginator(blogs, self.paginate_by)
-        page_number = request.GET.get('page') or 1
+        page_number = request.GET.get("page") or 1
         page_obj = paginator.get_page(page_number)
         context = {
-            'page_obj': page_obj,
+            "page_obj": page_obj,
         }
         return render(request, self.template_name, context)
 
 
 class BlogListView(ListView):
     model = Blog
-    template_name = 'blogs/blog_list.html'
-    context_object_name = 'blogs'
+    template_name = "blogs/blog_list.html"
+    context_object_name = "blogs"
 
 
 class BlogUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Blog
     form_class = BlogForm
-    template_name = 'blogs/blog_form.html'
-    permission_required = 'blogs.change_blog'
+    template_name = "blogs/blog_form.html"
+    permission_required = "blogs.change_blog"
 
     def get_success_url(self):
-        return reverse_lazy('blogs:blog_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy("blogs:blog_detail", kwargs={"pk": self.object.pk})
 
 
 class BlogDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Blog
-    template_name = 'blogs/blog_confirm_delete.html'
-    success_url = reverse_lazy('blogs:blog_list')
-    permission_required = 'blogs.delete_blog'
-
+    template_name = "blogs/blog_confirm_delete.html"
+    success_url = reverse_lazy("blogs:blog_list")
+    permission_required = "blogs.delete_blog"

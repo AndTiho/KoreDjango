@@ -9,10 +9,11 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+
 import os
+from pathlib import Path
 
 from dotenv import load_dotenv
-from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -41,10 +42,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-
     "catalog",
     "blogs",
-    "users"
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -87,8 +87,7 @@ DATABASES = {
         "HOST": os.getenv("HOST"),
         "USER": os.getenv("USER"),
         "PASSWORD": os.getenv("PASSWORD"),
-        "PORT": os.getenv("PORT")
-
+        "PORT": os.getenv("PORT"),
     }
 }
 
@@ -129,11 +128,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / 'static']
+STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Разрешённые типы файлов (дополнительная защита)
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 МБ
@@ -143,12 +142,12 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5 МБ
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-BASE_URL = 'http://127.0.0.1:8000'
+BASE_URL = "http://127.0.0.1:8000"
 
 # SMTP‑настройки для mail.ru
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_PORT = 2525 # 465 или 2525
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.mail.ru"
+EMAIL_PORT = 2525  # 465 или 2525
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False
 
@@ -159,14 +158,14 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")  # 16‑значный п
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER  # для ошибок сервера
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = "users.CustomUser"
 
 # LOGIN_REDIRECT_URL = 'catalog:product_list'
-LOGIN_URL = 'users:login'
+LOGIN_URL = "users:login"
 
 CACHES = {
-    'default':{
-        'BACKEND':'django_redis.cache.RedisCache',
-        'LOCATION':'redis://redis:6379/1',
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
     }
 }
