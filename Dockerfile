@@ -18,4 +18,4 @@ COPY . .
 
 EXPOSE 8000
 
-CMD ["sh", "-c", "python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "until python -c \"import socket; socket.create_connection(('db', 5432), 2)\"; do echo 'Waiting for postgres...'; sleep 2; done; python manage.py migrate --noinput && python manage.py collectstatic --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:8000"]
